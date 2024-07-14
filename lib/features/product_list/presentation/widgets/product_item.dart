@@ -1,0 +1,156 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../../core/utils/app_colors.dart';
+import '../../data/models/product.dart';
+
+class ProductItem extends StatelessWidget {
+  final int index;
+  final Product product;
+
+  const ProductItem({required this.index, required this.product, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: index.isEven ? 8.w : 0,
+        right: index.isOdd ? 8.w : 0,
+        top: 8.h,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.r),
+          border: Border.all(width: 2.w, color: Colors.blueGrey),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
+                      child: CachedNetworkImage(
+                        imageUrl: product.thumbnail ?? "",
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 150.h,
+                        errorWidget: (context, url, error) =>
+                        const Icon(Icons.error_outline, size: 30),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 7.w),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        padding: EdgeInsets.all(2.h.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25.r),
+                          border: Border.all(width: 2.w, color: Colors.blueGrey),
+                        ),
+                        child: const Icon(
+                          Icons.favorite_outline,
+                          color: AppColor.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.title ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  Text(
+                    product.description ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Row(
+                    children: [
+                      Text(
+                        "EGP ${(product.price! * (1 - product.discountPercentage! / 100)).toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.primary,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        "EGP ${product.price.toString()}",
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.black54,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Row(
+                    children: [
+                      const Text(
+                        "Review",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        "(${product.rating})",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 4.w),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: EdgeInsets.all(5.w.h),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.r),
+                          color: AppColor.primary,
+                        ),
+                        child: const Icon(Icons.add, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
