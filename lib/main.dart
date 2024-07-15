@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_task/feature/home/presentation/cubits/product_cubit.dart';
 
-import 'config/routes/routes.dart';
+import 'app/app.dart';
+import 'core/database/cache/cache_helper.dart';
+import 'core/service/service_locator.dart';
 
-void main() {
-  runApp(const MyApp());
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initServiceLocator();
+  await sl<CacheHelper>().init();
+
+  runApp(
+      BlocProvider(
+          create: (context) => sl<ProductCubit>()..getAllProduct(),
+        child:  const RouteApp(),
+      )
+
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(430, 932),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: (settings) => Routes.onGenerate(settings),
-      ),
-    );
-  }
-}
